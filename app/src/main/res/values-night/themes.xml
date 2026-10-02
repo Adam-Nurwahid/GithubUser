@@ -1,7 +1,36 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.GithubUser" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style
+        name="Base.Theme.GithubUser"
+        parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!-- Primary -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorOnPrimary">@color/on_primary_blue</item>
+        <item name="colorPrimaryContainer">@color/primary_container_blue</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container_blue</item>
+
+        <!-- Secondary -->
+        <item name="colorSecondary">@color/secondary_blue</item>
+        <item name="colorOnSecondary">@color/on_secondary_blue</item>
+        <item name="colorSecondaryContainer">@color/secondary_container_blue</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container_blue</item>
+
+        <!-- System UI -->
+        <item name="android:colorAccent">@color/primary_blue</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar">false</item>
+
     </style>
+    <!-- Primary Blue - Dark -->
+    <color name="primary_blue">#A8C7FA</color>
+    <color name="on_primary_blue">#00315F</color>
+    <color name="primary_container_blue">#004A87</color>
+    <color name="on_primary_container_blue">#D6E4FF</color>
+
+    <!-- Secondary Blue - Dark -->
+    <color name="secondary_blue">#BAC5F2</color>
+    <color name="on_secondary_blue">#23315F</color>
+    <color name="secondary_container_blue">#394773</color>
+    <color name="on_secondary_container_blue">#DCE2FF</color>
 </resources>
