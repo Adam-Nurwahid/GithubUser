@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">GithubUser</string>
+    <string name="title_search">GitHub Users</string>
+    <string name="title_detail">User Detail</string>
+    <string name="search_hint">Search GitHub users</string>
+    <string name="search_idle">Type a username to start searching.</string>
+    <string name="search_empty">No users found.</string>
+    <string name="retry">Retry</string>
+    <string name="cached_banner">Offline: showing cached results</string>
+    <string name="avatar_desc">User avatar</string>
+    <string name="login_format">\@%1$s</string>
+    <string name="stat_repos">%1$d\nRepositories</string>
+    <string name="stat_followers">%1$d\nFollowers</string>
+    <string name="stat_following">%1$d\nFollowing</string>
+    <string name="company_format">Company: %1$s</string>
+    <string name="location_format">Location: %1$s</string>
+    <string name="blog_format">Website: %1$s</string>
+    <string name="open_github">View on GitHub</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
