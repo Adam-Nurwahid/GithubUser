@@ -36,7 +36,18 @@ class UserDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnRetry.setOnClickListener { viewModel.load() }
-        viewModel.uiState.observe(viewLifecycleOwner) { render(it) }
+        viewModel.uiState.observe(
+            viewLifecycleOwner
+        ) { render(it) }
+
+        binding.fabFavorite.setOnClickListener {
+
+            val state = viewModel.uiState.value
+
+            if (state is DetailUiState.Success) {
+                viewModel.toggleFavorite(state.detail)
+            }
+        }
     }
 
     private fun render(state: DetailUiState) = with(binding) {
@@ -46,11 +57,83 @@ class UserDetailFragment : Fragment() {
 
         when (state) {
             is DetailUiState.Success -> {
-                tvCacheBanner.isVisible = state.isFromCache
-                bind(state.detail)
+
+                val user = state.detail
+
+                ivAvatar.loadAvatar(user.avatarUrl)
+
+                tvName.text =
+                    user.name ?: user.login
+
+                tvLogin.text =
+                    getString(
+                        R.string.login_format,
+                        user.login
+                    )
+
+                tvBio.setTextOrGone(user.bio)
+
+                tvCompany.setTextOrGone(
+                    user.company?.let {
+                        getString(
+                            R.string.company_format,
+                            it
+                        )
+                    }
+                )
+
+                tvLocation.setTextOrGone(
+                    user.location?.let {
+                        getString(
+                            R.string.location_format,
+                            it
+                        )
+                    }
+                )
+
+                tvBlog.setTextOrGone(
+                    user.blog?.let {
+                        getString(
+                            R.string.blog_format,
+                            it
+                        )
+                    }
+                )
+
+                tvRepos.text =
+                    user.publicRepos.toString()
+
+                tvFollowers.text =
+                    user.followers.toString()
+
+                tvFollowing.text =
+                    user.following.toString()
+
+                btnOpenGithub.setOnClickListener {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(user.htmlUrl)
+                        )
+                    )
+                }
+
+                fabFavorite.setImageResource(
+                    if (user.isFavorite) {
+                        R.drawable.ic_favorite
+                    } else {
+                        R.drawable.ic_favorite_border
+                    }
+                )
+
+                fabFavorite.isVisible = true
             }
-            is DetailUiState.Error -> tvError.setText(state.message)
-            DetailUiState.Loading -> Unit
+            is DetailUiState.Error -> {
+                fabFavorite.isVisible = false
+            }
+            DetailUiState.Loading -> {
+                fabFavorite.isVisible = false
+            }
         }
     }
 

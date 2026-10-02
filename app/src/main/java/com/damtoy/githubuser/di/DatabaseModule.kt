@@ -17,9 +17,19 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "github_users.db").build()
+    fun provideDatabase(
+        @ApplicationContext context: Context
+    ): AppDatabase =
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "github_users.db"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
-    fun provideUserDao(database: AppDatabase): UserDao = database.userDao()
+    fun provideUserDao(
+        database: AppDatabase
+    ): UserDao = database.userDao()
 }

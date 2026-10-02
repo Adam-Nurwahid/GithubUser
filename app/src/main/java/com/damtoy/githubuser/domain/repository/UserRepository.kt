@@ -4,8 +4,20 @@ import com.damtoy.githubuser.domain.Resource
 import com.damtoy.githubuser.domain.model.User
 import com.damtoy.githubuser.domain.model.UserDetail
 
-
 interface UserRepository {
-    suspend fun searchUsers(query: String): Resource<List<User>>
-    suspend fun getUserDetail(username: String): Resource<UserDetail>
+
+    suspend fun searchUsers(
+        query: String
+    ): Resource<List<User>>
+
+    suspend fun getUserDetail(
+        username: String
+    ): Resource<UserDetail>
+
+    suspend fun getFavorites(): Resource<List<User>>
+
+    suspend fun setFavorite(
+        id: Long,
+        favorite: Boolean
+    ): Resource<Unit>
 }

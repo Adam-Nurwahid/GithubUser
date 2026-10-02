@@ -1,5 +1,6 @@
 package com.damtoy.githubuser.domain.model
 
+
 data class UserDetail(
     val id: Long,
     val login: String,
@@ -12,5 +13,6 @@ data class UserDetail(
     val publicRepos: Int,
     val followers: Int,
     val following: Int,
-    val htmlUrl: String
+    val htmlUrl: String,
+    val isFavorite: Boolean = false
 )

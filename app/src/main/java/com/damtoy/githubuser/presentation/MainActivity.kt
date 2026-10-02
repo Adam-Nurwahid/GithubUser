@@ -3,6 +3,7 @@ package com.damtoy.githubuser.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -38,6 +39,43 @@ class MainActivity : AppCompatActivity() {
         navController = navHost.navController
 
         setupActionBarWithNavController(navController)
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+
+            when (item.itemId) {
+
+                R.id.searchFragment -> {
+                    navController.navigate(
+                        R.id.searchFragment
+                    )
+                    true
+                }
+
+                R.id.favoriteFragment -> {
+                    navController.navigate(
+                        R.id.favoriteFragment
+                    )
+                    true
+                }
+
+                R.id.settingsFragment -> {
+                    navController.navigate(
+                        R.id.settingsFragment
+                    )
+                    true
+                }
+
+                else -> false
+            }
+        }
+        navController.addOnDestinationChangedListener {
+                _,
+                destination,
+                _ ->
+
+            binding.bottomNavigation.isVisible =
+                destination.id != R.id.userDetailFragment
+        }
     }
 
     private fun applySavedTheme() {

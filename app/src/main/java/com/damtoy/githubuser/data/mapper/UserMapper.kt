@@ -6,9 +6,15 @@ import com.damtoy.githubuser.data.remote.dto.UserDto
 import com.damtoy.githubuser.domain.model.User
 import com.damtoy.githubuser.domain.model.UserDetail
 
-fun UserDto.toEntity() = UserEntity(id = id, login = login, avatarUrl = avatarUrl)
+fun UserDto.toEntity() = UserEntity(
+    id = id,
+    login = login,
+    avatarUrl = avatarUrl
+)
 
-fun UserDetailDto.toEntity() = UserEntity(
+fun UserDetailDto.toEntity(
+    isFavorite: Boolean = false
+) = UserEntity(
     id = id,
     login = login,
     avatarUrl = avatarUrl,
@@ -21,10 +27,16 @@ fun UserDetailDto.toEntity() = UserEntity(
     followers = followers ?: 0,
     following = following ?: 0,
     htmlUrl = htmlUrl ?: "https://github.com/$login",
-    isDetailCached = true
+    isDetailCached = true,
+    isFavorite = isFavorite
 )
 
-fun UserEntity.toDomain() = User(id = id, login = login, avatarUrl = avatarUrl)
+fun UserEntity.toDomain() = User(
+    id = id,
+    login = login,
+    avatarUrl = avatarUrl,
+    isFavorite = isFavorite
+)
 
 fun UserEntity.toDetail() = UserDetail(
     id = id,
@@ -38,5 +50,6 @@ fun UserEntity.toDetail() = UserDetail(
     publicRepos = publicRepos ?: 0,
     followers = followers ?: 0,
     following = following ?: 0,
-    htmlUrl = htmlUrl ?: "https://github.com/$login"
+    htmlUrl = htmlUrl ?: "https://github.com/$login",
+    isFavorite = isFavorite
 )

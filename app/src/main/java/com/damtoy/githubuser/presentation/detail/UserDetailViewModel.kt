@@ -6,6 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.damtoy.githubuser.domain.Resource
+import com.damtoy.githubuser.domain.model.UserDetail
+import com.damtoy.githubuser.domain.usecase.FavoriteUseCase
 import com.damtoy.githubuser.domain.usecase.GetUserDetailUseCase
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getUserDetail: GetUserDetailUseCase
+    private val getUserDetail: GetUserDetailUseCase,
+    private val favoriteUseCase: FavoriteUseCase
 ) : ViewModel() {
 
     // Navigation arguments are automatically exposed through SavedStateHandle.
@@ -38,6 +41,21 @@ class UserDetailViewModel @Inject constructor(
         }
     }
 
+    fun toggleFavorite(detail: UserDetail) {
+
+        viewModelScope.launch {
+
+            when (
+                favoriteUseCase.setFavorite(
+                    detail.id,
+                    !detail.isFavorite
+                )
+            ) {
+                is Resource.Success -> load()
+                is Resource.Error -> Unit
+            }
+        }
+    }
     companion object {
         const val ARG_USERNAME = "username"
     }

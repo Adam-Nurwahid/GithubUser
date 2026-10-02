@@ -23,33 +23,66 @@ class UserRepositoryImpl @Inject constructor(
     private val dao: UserDao
 ) : UserRepository {
 
-    override suspend fun searchUsers(query: String): Resource<List<User>> =
+    override suspend fun searchUsers(
+        query: String
+    ): Resource<List<User>> =
         try {
-            val entities = api.searchUsers(query, PAGE_SIZE).items.map { it.toEntity() }
+            val entities =
+                api.searchUsers(query, PAGE_SIZE)
+                    .items
+                    .map { it.toEntity() }
+
             dao.upsertBasic(entities)
-            Resource.Success(entities.map { it.toDomain() })
+
+            val favoriteIds =
+                dao.getFavoriteIds().toSet()
+
+            Resource.Success(
+                entities.map {
+                    it.copy(
+                        isFavorite = it.id in favoriteIds
+                    ).toDomain()
+                }
+            )
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
+
             val cached = dao.searchByLogin(query)
+
             if (cached.isNotEmpty()) {
-                Resource.Success(cached.map { it.toDomain() }, isFromCache = true)
+                Resource.Success(
+                    cached.map { it.toDomain() },
+                    isFromCache = true
+                )
             } else {
                 Resource.Error(e.toUserMessage())
             }
         }
 
-    override suspend fun getUserDetail(username: String): Resource<UserDetail> =
+    override suspend fun getUserDetail(
+        username: String
+    ): Resource<UserDetail> =
         try {
-            val entity = api.getUserDetail(username).toEntity()
+            val existing = dao.getByLogin(username)
+
+            val entity = api.getUserDetail(username).toEntity(
+                isFavorite = existing?.isFavorite ?: false
+            )
+
             dao.upsert(entity)
+
             Resource.Success(entity.toDetail())
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             val cached = dao.getByLogin(username)
+
             if (cached != null && cached.isDetailCached) {
-                Resource.Success(cached.toDetail(), isFromCache = true)
+                Resource.Success(
+                    cached.toDetail(),
+                    isFromCache = true
+                )
             } else {
                 Resource.Error(e.toUserMessage())
             }
@@ -69,4 +102,33 @@ class UserRepositoryImpl @Inject constructor(
     private companion object {
         const val PAGE_SIZE = 30
     }
+
+    override suspend fun getFavorites(): Resource<List<User>> =
+        try {
+            Resource.Success(
+                dao.getFavorites().map { it.toDomain() }
+            )
+        } catch (e: Exception) {
+            Resource.Error(
+                "Failed to load favorites."
+            )
+        }
+
+    override suspend fun setFavorite(
+        id: Long,
+        favorite: Boolean
+    ): Resource<Unit> =
+        try {
+            val updatedRows = dao.setFavorite(id, favorite)
+
+            if (updatedRows == 0) {
+                Resource.Error("User tidak ditemukan di database.")
+            } else {
+                Resource.Success(Unit)
+            }
+        } catch (e: Exception) {
+            Resource.Error(
+                "Failed to update favorite: ${e.message}"
+            )
+        }
 }

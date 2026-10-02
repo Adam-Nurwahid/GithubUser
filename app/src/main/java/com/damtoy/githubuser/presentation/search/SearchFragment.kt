@@ -23,12 +23,19 @@ class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModels()
 
-    private val adapter = UserAdapter { user ->
-        findNavController().navigate(
-            R.id.action_search_to_detail,
-            bundleOf(UserDetailViewModel.ARG_USERNAME to user.login)
-        )
-    }
+    private val adapter = UserAdapter(
+        onUserClick = { user ->
+            findNavController().navigate(
+                R.id.action_search_to_detail,
+                bundleOf(
+                    UserDetailViewModel.ARG_USERNAME to user.login
+                )
+            )
+        },
+        onFavoriteClick = { user ->
+            viewModel.toggleFavorite(user)
+        }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
