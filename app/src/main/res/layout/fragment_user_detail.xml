@@ -5,12 +5,32 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
+    <!-- Back Button -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="Kembali"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:padding="12dp"
+        android:src="@drawable/ic_back"
+        android:translationZ="10dp"
+        app:tint="?attr/colorOnSurface" />
+
+    <!-- Content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
+        android:paddingTop="64dp"
         android:paddingBottom="24dp"
         android:visibility="visible">
 
@@ -96,7 +116,7 @@
 
             </LinearLayout>
 
-            <!-- Statistics (Perbaikan pada layout dan text appearance) -->
+            <!-- Statistics -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,7 +153,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:gravity="center"
                             android:text="Repositories"
                             android:textAppearance="?attr/textAppearanceLabelSmall"
                             android:textColor="?attr/colorOnPrimaryContainer" />
@@ -160,7 +179,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:gravity="center"
                             android:text="Followers"
                             android:textAppearance="?attr/textAppearanceLabelSmall"
                             android:textColor="?attr/colorOnPrimaryContainer" />
@@ -187,7 +205,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:gravity="center"
                             android:text="Following"
                             android:textAppearance="?attr/textAppearanceLabelSmall"
                             android:textColor="?attr/colorOnPrimaryContainer" />
@@ -302,6 +319,8 @@
             android:textAllCaps="false" />
 
     </LinearLayout>
+
+    <!-- Favorite -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabFavorite"
         android:layout_width="wrap_content"

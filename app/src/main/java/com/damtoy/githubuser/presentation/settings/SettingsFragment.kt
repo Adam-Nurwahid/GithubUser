@@ -1,5 +1,7 @@
 package com.damtoy.githubuser.presentation.settings
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +18,7 @@ class SettingsFragment : Fragment() {
     private val themePreferences by lazy {
         requireContext().getSharedPreferences(
             "theme_preferences",
-            android.content.Context.MODE_PRIVATE
+            Context.MODE_PRIVATE
         )
     }
 
@@ -25,14 +27,11 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding =
-            FragmentSettingsBinding.inflate(
-                inflater,
-                container,
-                false
-            )
-
+        _binding = FragmentSettingsBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
 
@@ -42,34 +41,49 @@ class SettingsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val currentMode =
-            AppCompatDelegate.getDefaultNightMode()
+        setupTheme()
+        setupExitButton()
+    }
 
-        binding.switchDarkMode.isChecked =
-            currentMode == AppCompatDelegate.MODE_NIGHT_YES
+    private fun setupTheme() {
+        // Default ke MODE_NIGHT_FOLLOW_SYSTEM jika pengguna belum pernah memilih
+        val savedMode = themePreferences.getInt(
+            "theme_mode",
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        )
 
-        binding.switchDarkMode.setOnCheckedChangeListener {
-                _,
-                checked ->
+        // Cek apakah tampilan HP saat ini sedang menggunakan Mode Gelap (baik dari sistem atau manual)
+        val isDarkModeActive = when (savedMode) {
+            AppCompatDelegate.MODE_NIGHT_YES -> true
+            AppCompatDelegate.MODE_NIGHT_NO -> false
+            else -> { // MODE_NIGHT_FOLLOW_SYSTEM
+                val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                currentNightMode == Configuration.UI_MODE_NIGHT_YES
+            }
+        }
 
-            val newMode =
-                if (checked) {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
+        // Atur posisi switch sesuai kondisi aktif saat ini
+        binding.switchDarkMode.isChecked = isDarkModeActive
+
+        binding.switchDarkMode.setOnCheckedChangeListener { _, checked ->
+            val newMode = if (checked) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
 
             themePreferences
                 .edit()
-                .putInt(
-                    "theme_mode",
-                    newMode
-                )
+                .putInt("theme_mode", newMode)
                 .apply()
 
-            AppCompatDelegate.setDefaultNightMode(
-                newMode
-            )
+            AppCompatDelegate.setDefaultNightMode(newMode)
+        }
+    }
+
+    private fun setupExitButton() {
+        binding.btnExit.setOnClickListener {
+            requireActivity().finishAffinity()
         }
     }
 

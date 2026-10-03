@@ -19,7 +19,7 @@
         <!-- System UI -->
         <item name="android:colorAccent">@color/primary_blue</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightNavigationBar">false</item>
+        <item name="windowActionBar">false</item>
 
     </style>
     <!-- Primary Blue - Dark -->

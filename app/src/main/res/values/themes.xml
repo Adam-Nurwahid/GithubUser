@@ -3,7 +3,7 @@
     <style
         name="Base.Theme.GithubUser"
         parent="Theme.Material3.DayNight.NoActionBar">
-
+        <item name="windowActionBar">false</item>
         <!-- Primary -->
         <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorOnPrimary">@color/on_primary_blue</item>
@@ -19,7 +19,7 @@
         <!-- System UI -->
         <item name="android:colorAccent">@color/primary_blue</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightNavigationBar">true</item>
+
 
     </style>
 
