@@ -2,9 +2,9 @@ package com.damtoy.githubuser.data
 
 import com.damtoy.githubuser.data.local.UserDao
 import com.damtoy.githubuser.data.local.UserEntity
-import com.damtoy.githubuser.data.remote.dto.UserDetailDto
 import com.damtoy.githubuser.data.remote.GithubApi
 import com.damtoy.githubuser.data.remote.dto.SearchResponseDto
+import com.damtoy.githubuser.data.remote.dto.UserDetailDto
 import com.damtoy.githubuser.data.remote.dto.UserDto
 import com.damtoy.githubuser.data.repository.UserRepositoryImpl
 import com.damtoy.githubuser.domain.Resource
@@ -30,14 +30,18 @@ class UserRepositoryImplTest {
 
     @Test
     fun `searchUsers saves remote result to database and returns it`() = runTest {
+        // Arrange
         coEvery { api.searchUsers("adam", 30) } returns
                 SearchResponseDto(1, listOf(UserDto(1, "adam", "avatar")))
         coEvery { dao.upsertBasic(any()) } just runs
+        coEvery { dao.getFavoriteIds() } returns emptyList() // Stubbing yang dibutuhkan untuk alur sukses
 
+        // Act
         val result = repository.searchUsers("adam") as Resource.Success
 
+        // Assert
         assertEquals("adam", result.data.single().login)
-        assertEquals(false, result.isFromCache)
+        assertEquals(false, result.isFromCache) // Sekarang bernilai FALSE secara presisi
         coVerify { dao.upsertBasic(listOf(UserEntity(1, "adam", "avatar"))) }
     }
 
@@ -64,6 +68,7 @@ class UserRepositoryImplTest {
 
     @Test
     fun `getUserDetail caches remote result`() = runTest {
+        coEvery { dao.getByLogin("adam") } returns null // Pengisian data awal
         coEvery { api.getUserDetail("adam") } returns UserDetailDto(
             id = 1, login = "adam", avatarUrl = "avatar", name = "Adam",
             publicRepos = 5, followers = 2, following = 3
@@ -74,6 +79,7 @@ class UserRepositoryImplTest {
 
         assertEquals("Adam", result.data.name)
         assertEquals(5, result.data.publicRepos)
+        assertEquals(false, result.isFromCache)
         coVerify { dao.upsert(match { it.isDetailCached && it.id == 1L }) }
     }
 
@@ -90,8 +96,8 @@ class UserRepositoryImplTest {
     @Test
     fun `getUserDetail maps 404 to user not found`() = runTest {
         val notFound = HttpException(Response.error<Any>(404, "".toResponseBody()))
-        coEvery { api.getUserDetail("ghost") } throws notFound
         coEvery { dao.getByLogin("ghost") } returns null
+        coEvery { api.getUserDetail("ghost") } throws notFound
 
         val result = repository.getUserDetail("ghost") as Resource.Error
 

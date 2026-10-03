@@ -3,6 +3,7 @@ package com.damtoy.githubuser.presentation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.damtoy.githubuser.domain.Resource
 import com.damtoy.githubuser.domain.model.User
+import com.damtoy.githubuser.domain.usecase.FavoriteUseCase
 import com.damtoy.githubuser.domain.usecase.SearchUsersUseCase
 import com.damtoy.githubuser.presentation.search.SearchUiState
 import com.damtoy.githubuser.presentation.search.SearchViewModel
@@ -26,13 +27,14 @@ class SearchViewModelTest {
     @get:Rule val mainDispatcherRule = MainDispatcherRule()
 
     private val searchUsers = mockk<SearchUsersUseCase>()
+    private val favoriteUseCase = mockk<FavoriteUseCase>()
     private lateinit var viewModel: SearchViewModel
 
     private val user = User(1, "adam", "avatar")
 
     @Before
     fun setUp() {
-        viewModel = SearchViewModel(searchUsers)
+        viewModel = SearchViewModel(searchUsers, favoriteUseCase)
     }
 
     @Test
