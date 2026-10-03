@@ -168,7 +168,6 @@ github.token=ghp_xxxxxxxxxxxxxxxxxxxx
 - **Solution:** Adjusted the layouts (sizes, constraints, margins/padding) and tested them on multiple screen sizes/emulators.
 ### Trade-offs
 - Chose **MVVM** over full Clean Architecture to keep the codebase simple and proportional to the app's scale.
-- _(Add other trade-offs here, e.g. features that were out of scope.)_
 ---
 
 ## Author
